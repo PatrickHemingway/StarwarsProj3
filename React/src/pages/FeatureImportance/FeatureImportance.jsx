@@ -28,7 +28,7 @@ export default function FeatureImportanceChart() {
         <div className={styles.chartWrapper}>
             <h2 className={styles.chartTitle}>Feature Importance</h2>
 
-            <ResponsiveContainer width="100%" height="100%">
+            <ResponsiveContainer width="90%" height={700}>
                 <BarChart
                     data={data}
                     layout="vertical"

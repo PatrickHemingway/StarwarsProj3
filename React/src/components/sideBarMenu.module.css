@@ -1,19 +1,19 @@
 .container {
     position: relative;
     z-index: 9999;
-  }
-  
-  .menuButton {
+}
+
+.menuButton {
     background: none;
     border: none;
     cursor: pointer;
-  }
-  
-  .menuButton img {
+}
+
+.menuButton img {
     height: 40px;
-  }
-  
-  .overlay {
+}
+
+.overlay {
     position: fixed;
     top: 0;
     right: 0;
@@ -23,9 +23,9 @@
     backdrop-filter: blur(4px);
     display: flex;
     justify-content: flex-start;
-  }
-  
-  .sidebar {
+}
+
+.sidebar {
     width: 300px;
     height: 100vh;
     background-color: #2e2e2e;
@@ -34,40 +34,39 @@
     flex-direction: column;
     padding: 1.5rem;
     position: relative;
-  }
-  
-  .header {
+}
+
+.header {
     display: flex;
     justify-content: space-between;
     align-items: center;
-  }
-  
-  .logo {
+}
+
+.logo {
     height: 50px;
-  }
-  
-  .closeButton {
+}
+
+.closeButton {
     background: none;
     border: none;
     cursor: pointer;
-  }
-  
-  .nav {
+}
+
+.nav {
     display: flex;
     flex-direction: column;
     margin-top: 2rem;
     gap: 1rem;
-  }
-  
-  .nav a {
+}
+
+.nav a {
     color: white;
     text-decoration: none;
     font-weight: bold;
     font-size: 20px;
     font-family: Verdana, Geneva, Tahoma, sans-serif;
-  }
-  
-  .nav a:hover {
+}
+
+.nav a:hover {
     color: #FFE81F;
-  }
-  
+}
