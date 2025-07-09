@@ -1,18 +1,24 @@
+/* Ensure full-height layout and remove default scroll space */
+html, body, #root {
+  margin: 0;
+  padding: 0;
+  height: 100%;
+  overflow: hidden; /* Prevent scrolling */
+}
+
 .app-wrapper {
-  position: relative;
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+
   background-image: url('/background.png');
   background-size: cover;
   background-position: center;
   background-repeat: no-repeat;
-  min-height: 100vh;
-  width: 100%;
+
   overflow: hidden;
+  z-index: 0;
 }
 
-.content-overlay {
-  position: relative;
-  z-index: 1;
-  padding: 0rem;
-  color: white;
-
-}
