@@ -97,14 +97,3 @@
   font-size: 1.2rem;
   color: white;
 }
-
-.header-canvas {
-  position: fixed;
-  top: 1rem;
-  left: 220px; /* logo width (200px) + margin */
-  height: 60px; /* match logo height (adjust as needed) */
-  width: calc(100% - 220px);
-  background-color: transparent;
-  z-index: 900;
-  pointer-events: none; /* allows clicks to pass through */
-}
