@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import './HomePage.css'
 
 const unitTypes = [
@@ -52,7 +52,10 @@ function HomePage() {
   return (
     <div className="homepage">
       <img src="/logo.png" alt="Star Wars Logo" className="starwars-logo" />
+      <canvas id="header-canvas" className="header-canvas"></canvas>
+      <div className="predictor-box">
       <h1 className="predictor-title">Allegiance Predictor</h1>
+      
 
       <form onSubmit={handleSubmit} className="prediction-form">
         <select
@@ -87,6 +90,7 @@ function HomePage() {
           <h2>Prediction: {prediction}</h2>
         </div>
       )}
+    </div>
     </div>
   )
 }
