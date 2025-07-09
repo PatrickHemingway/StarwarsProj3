@@ -1,4 +1,4 @@
-from flask import Flask, request, jsonify
+from flask import Flask, request, jsonify, send_file
 import pandas as pd
 import pickle
 
@@ -6,6 +6,11 @@ model_filename = 'model.pkl'
 loaded_model = pickle.load(open(f'{model_filename}', 'rb'))
 
 app = Flask(__name__)
+
+
+@app.route('/feature-importance')
+def feature_importance():
+    return send_file('feature_importance.json')
 
 @app.route('/model', methods=['POST'])
 def prompt_model():
