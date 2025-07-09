@@ -23,6 +23,39 @@ function HomePage() {
   const [prediction, setPrediction] = useState(null)
   const [loading, setLoading] = useState(false)
 
+  useEffect(() => {
+    const canvas = document.getElementById('header-canvas')
+    const ctx = canvas.getContext('2d')
+    const fighter = new Image()
+    fighter.src = '/Fighter.png'
+
+    let x = 0
+    let frame = 0
+
+    const animate = () => {
+      // Resize canvas to always match its styled size
+      canvas.width = canvas.offsetWidth
+      canvas.height = canvas.offsetHeight
+
+      ctx.clearRect(0, 0, canvas.width, canvas.height)
+
+      // Bobbing effect
+      const y = 10 + Math.sin(frame * 0.1) * 5
+
+      // Draw the fighter
+      ctx.drawImage(fighter, x, y, 80, 30)
+
+      // Move to the right
+      x += 2
+      if (x > canvas.width) x = -60
+
+      frame++
+      requestAnimationFrame(animate)
+    }
+
+    fighter.onload = animate
+  }, [])
+
   const handleSubmit = async (e) => {
     e.preventDefault()
     setLoading(true)
@@ -53,48 +86,48 @@ function HomePage() {
   return (
     <div className="homepage">
       <Link to="/Chart">
-      <img src="/logo.png" alt="Star Wars Logo" className="starwars-logo" />
+        <img src="/logo.png" alt="Star Wars Logo" className="starwars-logo" />
       </Link>
+
       <canvas id="header-canvas" className="header-canvas"></canvas>
+
       <div className="predictor-box">
-      
-      <h1 className="predictor-title">Allegiance Predictor</h1>
-      
+        <h1 className="predictor-title">Allegiance Predictor</h1>
 
-      <form onSubmit={handleSubmit} className="prediction-form">
-        <select
-          value={homeworld}
-          onChange={(e) => setHomeworld(e.target.value)}
-          required
-        >
-          <option value="">Homeworld</option>
-          {homeworlds.map(hw => (
-            <option key={hw} value={hw}>{hw}</option>
-          ))}
-        </select>
+        <form onSubmit={handleSubmit} className="prediction-form">
+          <select
+            value={homeworld}
+            onChange={(e) => setHomeworld(e.target.value)}
+            required
+          >
+            <option value="">Homeworld</option>
+            {homeworlds.map(hw => (
+              <option key={hw} value={hw}>{hw}</option>
+            ))}
+          </select>
 
-        <select
-          value={unitType}
-          onChange={(e) => setUnitType(e.target.value)}
-          required
-        >
-          <option value="">Unit Type</option>
-          {unitTypes.map(ut => (
-            <option key={ut} value={ut}>{ut}</option>
-          ))}
-        </select>
+          <select
+            value={unitType}
+            onChange={(e) => setUnitType(e.target.value)}
+            required
+          >
+            <option value="">Unit Type</option>
+            {unitTypes.map(ut => (
+              <option key={ut} value={ut}>{ut}</option>
+            ))}
+          </select>
 
-        <button type="submit" disabled={loading}>
-          {loading ? "..." : "Predict"}
-        </button>
-      </form>
+          <button type="submit" disabled={loading}>
+            {loading ? "..." : "Predict"}
+          </button>
+        </form>
 
-      {prediction && (
-        <div className="prediction-result">
-          <h2>Prediction: {prediction}</h2>
-        </div>
-      )}
-    </div>
+        {prediction && (
+          <div className="prediction-result">
+            <h2>Prediction: {prediction}</h2>
+          </div>
+        )}
+      </div>
     </div>
   )
 }
