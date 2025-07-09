@@ -11,6 +11,7 @@ useEffect(() => {
   const deathStar = new Image();
   fighter.src = '/Fighter.png';
   deathStar.src = '/deathstar.png';
+  const energyParticles = [];
 
   let x = -60;
   let frame = 0;
@@ -138,22 +139,53 @@ useEffect(() => {
 
       // Laser beam effect
       if (deathFiring) {
-        const flicker = deathLaserFrame % 10 < 5;
-        const growProgress = Math.min(deathLaserFrame / 30, 1);
-        const shrinkProgress = deathLaserFrame > 90 ? 1 - (deathLaserFrame - 90) / 30 : 1;
-        const widthFactor = flicker ? (growProgress * shrinkProgress) : (growProgress * shrinkProgress * 0.8);
-        const laserWidth = 4 + 20 * widthFactor;
-        const gradient = ctx.createLinearGradient(deathX - 5, 0, 0, 0);
-        gradient.addColorStop(0, 'white');
-        gradient.addColorStop(1, 'red');
+  const flicker = deathLaserFrame % 10 < 5;
+  const growProgress = Math.min(deathLaserFrame / 30, 1);
+  const shrinkProgress = deathLaserFrame > 90 ? 1 - (deathLaserFrame - 90) / 30 : 1;
+  const widthFactor = flicker ? (growProgress * shrinkProgress) : (growProgress * shrinkProgress * 0.8);
+  const laserWidth = 4 + 20 * widthFactor;
+  const beamY = deathY + 100;
 
-        ctx.strokeStyle = gradient;
-        ctx.lineWidth = laserWidth;
-        ctx.beginPath();
-        ctx.moveTo(deathX - 0, deathY + 100);
-        ctx.lineTo(100, deathY + 100);
-        ctx.stroke();
-      }
+  // === Main laser beam ===
+  const gradient = ctx.createLinearGradient(deathX - 5, 0, 0, 0);
+  gradient.addColorStop(0, 'white');
+  gradient.addColorStop(1, 'red');
+
+  ctx.strokeStyle = gradient;
+  ctx.lineWidth = laserWidth;
+  ctx.beginPath();
+  ctx.moveTo(deathX, beamY);
+  ctx.lineTo(0, beamY);
+  ctx.stroke();
+
+  // === Intense particle explosion across screen ===
+  const particlesPerFrame = 150;
+
+  for (let i = 0; i < particlesPerFrame; i++) {
+      energyParticles.push({
+      x: deathX,
+      y: beamY + (Math.random() - 0.5) * (laserWidth * 0.2),
+      size: Math.random() * 10 + 1, // 🔥 doubled size from (0.5 to 2) ➜ now (1 to 4)
+      dx: -(Math.random() * 20 + 10), // 🔥 doubled leftward speed ➜ now (-10 to -30)
+      alpha: Math.random() * 0.8 + 0.2,
+      color: Math.random() > 0.5 ? 'red' : 'white'
+    });
+  }
+
+  // Draw particles
+  for (let i = energyParticles.length - 1; i >= 0; i--) {
+    const p = energyParticles[i];
+    ctx.fillStyle = `rgba(${p.color === 'white' ? '255,255,255' : '255,0,0'}, ${p.alpha})`;
+    ctx.fillRect(p.x, p.y, p.size, p.size);
+    p.x += p.dx;
+    p.alpha -= 0.01;
+
+    if (p.alpha <= 0 || p.x < 0) {
+      energyParticles.splice(i, 1);
+    }
+  }
+}
+
     }
 
     // Reset animation
