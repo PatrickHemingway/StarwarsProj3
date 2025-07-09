@@ -4,6 +4,7 @@ from flask import Flask, request, jsonify, send_file
 import pandas as pd
 import pickle
 
+
 model_filename = 'model.pkl'
 loaded_model = pickle.load(open(f'{model_filename}', 'rb'))
 
@@ -13,7 +14,13 @@ CORS(app)
 
 @app.route('/feature-importance')
 def feature_importance():
-    return send_file('feature_importance.json')
+    try:
+        df = pd.read_json('feature_importance.json')
+        return jsonify(df.to_dict(orient='records'))
+    except Exception as e:
+        print(f"Error: {e}")
+        return jsonify({"error": str(e)}), 500
+
 
 @app.route('/model', methods=['POST'])
 def prompt_model():
