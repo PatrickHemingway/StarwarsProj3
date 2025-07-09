@@ -5,12 +5,15 @@ function HomePage() {
   const [homeworld, setHomeworld] = useState('')
   const [unitType, setUnitType] = useState('')
   const [prediction, setPrediction] = useState(null)
+  const [loading, setLoading] = useState(false)
 
   const handleSubmit = async (e) => {
     e.preventDefault()
+    setLoading(true)
+    setPrediction(null)
 
     try {
-      const response = await fetch('http://localhost:5000/predict', {
+      const response = await fetch('http://localhost:5000/model', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json'
@@ -22,10 +25,18 @@ function HomePage() {
       })
 
       const data = await response.json()
-      setPrediction(data.prediction)
+
+      if (data.prediction && Array.isArray(data.prediction)) {
+        const result = data.prediction[0]
+        setPrediction(result ? "Resistance" : "Empire")
+      } else {
+        setPrediction("Unexpected response format.")
+      }
     } catch (error) {
-      console.error('Error predicting:', error)
-      setPrediction('Error contacting API')
+      console.error('Prediction error:', error)
+      setPrediction("Error contacting API.")
+    } finally {
+      setLoading(false)
     }
   }
 
@@ -39,7 +50,7 @@ function HomePage() {
             type="text"
             value={homeworld}
             onChange={(e) => setHomeworld(e.target.value)}
-            placeholder="e.g. Tatooine"
+            placeholder="e.g. Naboo"
             required
           />
         </label>
@@ -55,7 +66,9 @@ function HomePage() {
           />
         </label>
 
-        <button type="submit">Predict</button>
+        <button type="submit" disabled={loading}>
+          {loading ? "Predicting..." : "Predict"}
+        </button>
       </form>
 
       {prediction && (
