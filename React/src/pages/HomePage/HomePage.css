@@ -1,0 +1,41 @@
+.homepage {
+  max-width: 600px;
+  margin: auto;
+  text-align: center;
+  padding: 2rem;
+  background: rgba(0, 0, 0, 0.3);
+  border-radius: 1rem;
+}
+
+.prediction-form {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  margin-top: 1rem;
+}
+
+.prediction-form input {
+  padding: 0.5rem;
+  border-radius: 5px;
+  border: none;
+  font-size: 1rem;
+}
+
+.prediction-form button {
+  padding: 0.5rem;
+  font-size: 1rem;
+  background-color: #00bfff;
+  border: none;
+  color: white;
+  cursor: pointer;
+  border-radius: 5px;
+}
+
+.prediction-form button:hover {
+  background-color: #0084b4;
+}
+
+.prediction-result {
+  margin-top: 2rem;
+  font-size: 1.5rem;
+}
