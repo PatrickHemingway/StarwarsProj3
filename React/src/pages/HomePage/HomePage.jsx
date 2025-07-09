@@ -1,6 +1,21 @@
 import { useState } from 'react'
 import './HomePage.css'
 
+const unitTypes = [
+  'stormtrooper', 'tie_fighter', 'at-st', 'x-wing',
+  'resistance_soldier', 'at-at', 'tie_silencer', 'unknown'
+]
+
+const homeworlds = [
+  'Tatooine', 'Alderaan', 'Naboo', 'Kashyyyk', 'Stewjon', 'Eriadu', 'Corellia',
+  'Rodia', 'Bestine IV', 'Dagobah', 'Trandosha', 'Socorro', 'Mon Cala',
+  'Chandrila', 'Sullust', 'Toydaria', 'Malastare', 'Dathomir', 'Ryloth',
+  'Aleen Minor', 'Vulpter', 'Troiken', 'Tund', 'Haruun Kal', 'Cerea',
+  'Glee Anselm', 'Iridonia', 'Tholoth', 'Iktotch', 'Quermia', 'Dorin',
+  'Champala', 'Mirial', 'Serenno', 'Concord Dawn', 'Zolan', 'Ojom', 'Skako',
+  'Muunilinst', 'Shili', 'Kalee', 'Umbara'
+]
+
 function HomePage() {
   const [homeworld, setHomeworld] = useState('')
   const [unitType, setUnitType] = useState('')
@@ -15,17 +30,11 @@ function HomePage() {
     try {
       const response = await fetch('http://localhost:5000/model', {
         method: 'POST',
-        headers: {
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({
-          homeworld: homeworld,
-          unit_type: unitType
-        })
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ homeworld, unit_type: unitType })
       })
 
       const data = await response.json()
-
       if (data.prediction && Array.isArray(data.prediction)) {
         const result = data.prediction[0]
         setPrediction(result ? "Resistance" : "Empire")
@@ -42,32 +51,34 @@ function HomePage() {
 
   return (
     <div className="homepage">
-      <h1>Star Wars Allegiance Predictor</h1>
-      <form onSubmit={handleSubmit} className="prediction-form">
-        <label>
-          Homeworld:
-          <input
-            type="text"
-            value={homeworld}
-            onChange={(e) => setHomeworld(e.target.value)}
-            placeholder="e.g. Naboo"
-            required
-          />
-        </label>
+      <img src="/logo.png" alt="Star Wars Logo" className="starwars-logo" />
+      <h1 className="predictor-title">Allegiance Predictor</h1>
 
-        <label>
-          Unit Type:
-          <input
-            type="text"
-            value={unitType}
-            onChange={(e) => setUnitType(e.target.value)}
-            placeholder="e.g. stormtrooper"
-            required
-          />
-        </label>
+      <form onSubmit={handleSubmit} className="prediction-form">
+        <select
+          value={homeworld}
+          onChange={(e) => setHomeworld(e.target.value)}
+          required
+        >
+          <option value="">Homeworld</option>
+          {homeworlds.map(hw => (
+            <option key={hw} value={hw}>{hw}</option>
+          ))}
+        </select>
+
+        <select
+          value={unitType}
+          onChange={(e) => setUnitType(e.target.value)}
+          required
+        >
+          <option value="">Unit Type</option>
+          {unitTypes.map(ut => (
+            <option key={ut} value={ut}>{ut}</option>
+          ))}
+        </select>
 
         <button type="submit" disabled={loading}>
-          {loading ? "Predicting..." : "Predict"}
+          {loading ? "..." : "Predict"}
         </button>
       </form>
 
