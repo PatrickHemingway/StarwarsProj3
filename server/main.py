@@ -6,9 +6,9 @@ import pickle
 
 
 
-loaded_model = pickle.load(open(f'server/model.pkl', 'rb'))
+loaded_model = pickle.load(open(f'model.pkl', 'rb'))
 
-loaded_EX_model = pickle.load(open(f'server/EX_model.pkl', 'rb'))
+loaded_EX_model = pickle.load(open(f'EX_model.pkl', 'rb'))
 
 app = Flask(__name__)
 CORS(app)

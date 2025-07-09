@@ -52,9 +52,6 @@ function HomePage() {
 
   return (
     <div className="homepage">
-      <Link to="/Chart">
-      <img src="/logo.png" alt="Star Wars Logo" className="starwars-logo" />
-      </Link>
       <h1 className="predictor-title">Allegiance Predictor</h1>
 
       <form onSubmit={handleSubmit} className="prediction-form">
