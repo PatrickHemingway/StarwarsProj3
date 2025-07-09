@@ -31,58 +31,75 @@ useEffect(() => {
     return centerY + Math.sin(frame * waveFrequency) * waveAmplitude;
   }
 
-  const animate = () => {
-    canvas.width = canvas.offsetWidth;
-    canvas.height = canvas.offsetHeight;
-    ctx.clearRect(0, 0, canvas.width, canvas.height);
+const animate = () => {
+  canvas.width = canvas.offsetWidth;
+  canvas.height = canvas.offsetHeight;
+  ctx.clearRect(0, 0, canvas.width, canvas.height);
 
-    // Speed up faster
-    speed = Math.min(speed + 0.04, 4.5);
+  speed = Math.min(speed + 0.04, 4.5);
 
-    // Get path y & angle
-    const y = getPathY(frame);
+  let y, angle;
+  const flyUpStart = 260;
+
+  if (frame < flyUpStart) {
+    y = getPathY(frame);
     const dy = y - prevY;
     const dx = speed;
-    const angle = Math.atan2(dy, dx);
+    angle = Math.atan2(dy, dx);
     prevY = y;
 
-    // Fire laser every 10 frames during frames 160–210
+    // Fire lasers before transition to sinusoid
     if (frame >= 160 && frame <= 210 && laserCooldown === 0) {
       lasers.push({ x: x + 30, y: y - 1, dx: 12 });
       laserCooldown = 10;
     }
     if (laserCooldown > 0) laserCooldown--;
+  } else {
+    // Fly upward at 10-degree angle
+    const flyAngle = -Math.PI / 21; // -10 degrees in radians
+    const flySpeed = 2.5; // constant speed, no acceleration
+    const dx = flySpeed * Math.cos(flyAngle);
+    const dy = flySpeed * Math.sin(flyAngle);
 
-    // Draw fighter
-    ctx.save();
-    ctx.translate(x, y);
-    ctx.rotate(angle);
-    ctx.drawImage(fighter, -30, -15, 60, 30);
-    ctx.restore();
+    x += dx;
+    y = prevY + dy;
+    angle = flyAngle;
+    prevY = y;
+  }
 
-    // Draw lasers
-    ctx.fillStyle = 'lime';
-    for (let i = lasers.length - 1; i >= 0; i--) {
-      lasers[i].x += lasers[i].dx;
-      ctx.fillRect(lasers[i].x, lasers[i].y, 12, 2);
-      if (lasers[i].x > canvas.width) lasers.splice(i, 1);
-    }
 
-    // Move forward
-    x += speed;
+  // Draw fighter
+  ctx.save();
+  ctx.translate(x, y);
+  ctx.rotate(angle);
+  ctx.drawImage(fighter, -30, -15, 60, 30);
+  ctx.restore();
 
-    // Reset if off screen
-    if (x > canvas.width + 60) {
-      x = -60;
-      frame = 0;
-      speed = 1.5;
-      laserCooldown = 0;
-      lasers.length = 0;
-    }
+  // Draw lasers
+  ctx.fillStyle = 'lime';
+  for (let i = lasers.length - 1; i >= 0; i--) {
+    lasers[i].x += lasers[i].dx;
+    ctx.fillRect(lasers[i].x, lasers[i].y, 12, 2);
+    if (lasers[i].x > canvas.width) lasers.splice(i, 1);
+  }
 
-    frame++;
-    requestAnimationFrame(animate);
-  };
+  // Move fighter forward
+  x += speed;
+
+  // Reset animation if off-screen
+  if (x > canvas.width + 60 || y < -30) {
+    x = -60;
+    frame = 0;
+    speed = 1.5;
+    prevY = canvas.height / 2;
+    lasers.length = 0;
+    laserCooldown = 0;
+  }
+
+  frame++;
+  requestAnimationFrame(animate);
+};
+
 
   fighter.onload = animate;
 }, []);
