@@ -1,15 +1,13 @@
 from flask import Flask, request, jsonify
-from flask_cors import CORS
 import pandas as pd
 import pickle
 
-model_filename = 'model.pkl'
-loaded_model = pickle.load(open(f'{model_filename}', 'rb'))
 
-loaded_EX_model = pickle.load(open(f'EX_model.pkl', 'rb'))
+loaded_model = pickle.load(open(f'server/model.pkl', 'rb'))
+
+loaded_EX_model = pickle.load(open(f'server/EX_model.pkl', 'rb'))
 
 app = Flask(__name__)
-CORS(app)
 
 @app.route('/model', methods=['POST'])
 def prompt_model():
