@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react'
 import './HomePage.css'
+import { Link } from 'react-router'
 
 const unitTypes = [
   'stormtrooper', 'tie_fighter', 'at-st', 'x-wing',
@@ -51,9 +52,12 @@ function HomePage() {
 
   return (
     <div className="homepage">
+      <Link to="/Chart">
       <img src="/logo.png" alt="Star Wars Logo" className="starwars-logo" />
+      </Link>
       <canvas id="header-canvas" className="header-canvas"></canvas>
       <div className="predictor-box">
+      
       <h1 className="predictor-title">Allegiance Predictor</h1>
       
 

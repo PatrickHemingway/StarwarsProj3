@@ -1,13 +1,28 @@
 from flask import Flask, request, jsonify
 from flask_cors import CORS
+from flask import Flask, request, jsonify, send_file
 import pandas as pd
 import pickle
 
-model_filename = 'model.pkl'
-loaded_model = pickle.load(open(f'{model_filename}', 'rb'))
+
+
+loaded_model = pickle.load(open(f'server/model.pkl', 'rb'))
+
+loaded_EX_model = pickle.load(open(f'server/EX_model.pkl', 'rb'))
 
 app = Flask(__name__)
 CORS(app)
+
+
+@app.route('/feature-importance')
+def feature_importance():
+    try:
+        df = pd.read_json('feature_importance.json')
+        return jsonify(df.to_dict(orient='records'))
+    except Exception as e:
+        print(f"Error: {e}")
+        return jsonify({"error": str(e)}), 500
+
 
 @app.route('/model', methods=['POST'])
 def prompt_model():
@@ -48,10 +63,13 @@ def prompt_model():
 
         prediction = loaded_model.predict(X_predict_encoded)
         print(prediction)
-
         prediction_list = prediction.tolist()
 
-        return jsonify({"prediction": prediction_list}), 200
+        EX_prediction = loaded_EX_model.predict(X_predict_encoded)
+        print(EX_prediction)
+        EX_prediction_list = EX_prediction.tolist()
+
+        return jsonify({"prediction": prediction_list, 'XGB-prediction': EX_prediction_list}), 200
 
     except Exception as e:
         print(f"Error: {e}")
